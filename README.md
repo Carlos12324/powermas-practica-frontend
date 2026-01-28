@@ -2,7 +2,7 @@
 
 Frontend para el sistema de gestión de beneficiarios PowerMas, construido con React + TypeScript + Vite.
 
-## 🚀 Tecnologías
+## Tecnologías
 
 - **React 18** - Biblioteca de UI
 - **TypeScript** - Tipado estático
@@ -11,13 +11,13 @@ Frontend para el sistema de gestión de beneficiarios PowerMas, construido con R
 - **React Router DOM** - Enrutamiento
 - **Axios** - Cliente HTTP
 
-## 📋 Requisitos previos
+## Requisitos previos
 
 - Node.js 18 o superior
 - npm 9 o superior
 - API Backend ejecutándose (ASP.NET Core)
 
-## 🛠️ Instalación
+## Instalación
 
 1. Clona el repositorio e ingresa al directorio:
 
@@ -41,13 +41,13 @@ cp .env.example .env
 # VITE_API_BASE_URL=http://localhost:5005
 ```
 
-## 🔧 Variables de entorno
+## Variables de entorno
 
 | Variable | Descripción | Valor por defecto |
 |----------|-------------|-------------------|
 | `VITE_API_BASE_URL` | URL base de la API | `http://localhost:5005` |
 
-## 💻 Desarrollo
+## Desarrollo
 
 Inicia el servidor de desarrollo:
 
@@ -57,7 +57,7 @@ npm run dev
 
 El frontend estará disponible en `http://localhost:5173`
 
-## 🏗️ Build
+## Build
 
 Genera la versión de producción:
 
@@ -67,7 +67,7 @@ npm run build
 
 Los archivos se generarán en el directorio `dist/`
 
-## 📁 Estructura del proyecto
+## Estructura del proyecto
 
 ```
 src/
@@ -105,7 +105,7 @@ src/
 └── main.tsx
 ```
 
-## 🛣️ Rutas
+## Rutas
 
 | Ruta | Descripción |
 |------|-------------|
@@ -117,7 +117,7 @@ src/
 | `/dashboard` | Próximamente |
 | `/configuracion` | Próximamente |
 
-## 📡 API Endpoints
+## API Endpoints
 
 El frontend consume los siguientes endpoints:
 
@@ -131,11 +131,11 @@ El frontend consume los siguientes endpoints:
 ### Documentos de Identidad
 - `GET /api/documentos-identidad/activos` - Listar activos
 
-## 🎨 Estilos
+##  Estilos
 
 El proyecto utiliza TailwindCSS 4 con la configuración por defecto. Los estilos personalizados se encuentran en `src/index.css`.
 
-## 📝 Scripts disponibles
+## Scripts disponibles
 
 ```bash
 npm run dev      # Servidor de desarrollo

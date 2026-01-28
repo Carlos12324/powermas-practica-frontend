@@ -43,7 +43,7 @@ export default function BeneficiariosListPage() {
         (b) =>
           b.nombres.toLowerCase().includes(term) ||
           b.apellidos.toLowerCase().includes(term) ||
-          b.numeroDocumento.includes(term)
+          b.numeroDocumento.toLowerCase().includes(term)
       );
       setFilteredBeneficiarios(filtered);
     }
@@ -152,7 +152,7 @@ export default function BeneficiariosListPage() {
             </div>
             <input
               type="text"
-              placeholder="Buscar por nombre o DNI..."
+              placeholder="Buscar por nombres, apellidos o número de documento..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -227,6 +227,9 @@ export default function BeneficiariosListPage() {
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    #
+                  </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     ID
                   </th>
@@ -251,8 +254,11 @@ export default function BeneficiariosListPage() {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {filteredBeneficiarios.map((beneficiario) => (
+                {filteredBeneficiarios.map((beneficiario, index) => (
                   <tr key={beneficiario.id} className="hover:bg-gray-50">
+                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-400">
+                      {index + 1}
+                    </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {beneficiario.id}
                     </td>

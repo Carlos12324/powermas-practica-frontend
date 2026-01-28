@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getBeneficiarioById, updateBeneficiario } from '../api/beneficiariosApi';
 import { getDocumentosActivos } from '../api/documentosApi';
@@ -9,8 +9,13 @@ import { formatDateInput } from '../utils/formatDate';
 import {
   validateRequired,
   validateNumeroDocumento,
+  validateNumeroDocumentoRealTime,
   validateSexo,
   validateFechaNacimiento,
+  validateFechaNacimientoRealTime,
+  sanitizeNumeroDocumento,
+  getNumeroDocumentoHint,
+  getTodayISO,
 } from '../utils/validators';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
@@ -99,16 +104,64 @@ export default function BeneficiarioEditPage() {
       ...prev,
       [name]: name === 'documentoIdentidadId' ? parseInt(value) || 0 : value,
     }));
+    
+    // Clear error when user types
     if (errors[name as keyof FormErrors]) {
       setErrors((prev) => ({ ...prev, [name]: undefined }));
+    }
+
+    // Validación en tiempo real para fecha de nacimiento
+    if (name === 'fechaNacimiento') {
+      const fechaRealTimeValidation = validateFechaNacimientoRealTime(value);
+      if (!fechaRealTimeValidation.isValid) {
+        setErrors((prev) => ({ ...prev, fechaNacimiento: fechaRealTimeValidation.message }));
+      }
+    }
+
+    // Si cambia el documento, limpiar y re-sanitizar el número de documento
+    if (name === 'documentoIdentidadId') {
+      const newDocId = parseInt(value) || 0;
+      const newDoc = documentos.find((d) => d.id === newDocId);
+      const sanitized = sanitizeNumeroDocumento(formData.numeroDocumento, newDoc);
+      setFormData((prev) => ({ ...prev, numeroDocumento: sanitized }));
+      
+      // Re-validar en tiempo real
+      const realTimeValidation = validateNumeroDocumentoRealTime(sanitized, newDoc);
+      if (!realTimeValidation.isValid) {
+        setErrors((prev) => ({ ...prev, numeroDocumento: realTimeValidation.message }));
+      } else {
+        setErrors((prev) => ({ ...prev, numeroDocumento: undefined }));
+      }
     }
   }
 
   function handleNumeroDocumentoChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const value = e.target.value.replace(/\D/g, '');
-    setFormData((prev) => ({ ...prev, numeroDocumento: value }));
-    if (errors.numeroDocumento) {
+    const selectedDoc = documentos.find((d) => d.id === formData.documentoIdentidadId);
+    const sanitized = sanitizeNumeroDocumento(e.target.value, selectedDoc);
+    
+    setFormData((prev) => ({ ...prev, numeroDocumento: sanitized }));
+    
+    // Validación en tiempo real
+    const realTimeValidation = validateNumeroDocumentoRealTime(sanitized, selectedDoc);
+    if (!realTimeValidation.isValid) {
+      setErrors((prev) => ({ ...prev, numeroDocumento: realTimeValidation.message }));
+    } else {
       setErrors((prev) => ({ ...prev, numeroDocumento: undefined }));
+    }
+  }
+
+  function handleNumeroDocumentoBlur() {
+    const selectedDoc = documentos.find((d) => d.id === formData.documentoIdentidadId);
+    const validation = validateNumeroDocumento(formData.numeroDocumento, selectedDoc);
+    if (!validation.isValid) {
+      setErrors((prev) => ({ ...prev, numeroDocumento: validation.message }));
+    }
+  }
+
+  function handleFechaNacimientoBlur() {
+    const validation = validateFechaNacimiento(formData.fechaNacimiento);
+    if (!validation.isValid) {
+      setErrors((prev) => ({ ...prev, fechaNacimiento: validation.message }));
     }
   }
 
@@ -193,6 +246,29 @@ export default function BeneficiarioEditPage() {
     }
   }
 
+  // ⚠️ IMPORTANTE: Todos los hooks y valores derivados DEBEN estar ANTES de cualquier return condicional
+  const documentoOptions = documentos.map((doc) => ({
+    value: doc.id,
+    label: `${doc.abreviatura} - ${doc.nombre} (${doc.pais})`,
+  }));
+
+  // Documento seleccionado actual
+  const selectedDocumento = useMemo(
+    () => documentos.find((d) => d.id === formData.documentoIdentidadId),
+    [documentos, formData.documentoIdentidadId]
+  );
+
+  // Hint para el número de documento
+  const numeroDocumentoHint = getNumeroDocumentoHint(selectedDocumento);
+
+  // Max length para el input de número de documento
+  const numeroDocumentoMaxLength = selectedDocumento?.longitud && selectedDocumento.longitud > 0
+    ? selectedDocumento.longitud
+    : 20;
+
+  // Fecha máxima para fecha de nacimiento (hoy)
+  const todayISO = getTodayISO();
+
   if (isLoading) {
     return (
       <div className="p-6 lg:p-8">
@@ -236,11 +312,6 @@ export default function BeneficiarioEditPage() {
       </div>
     );
   }
-
-  const documentoOptions = documentos.map((doc) => ({
-    value: doc.id,
-    label: `${doc.abreviatura} - ${doc.nombre}`,
-  }));
 
   return (
     <div className="p-6 lg:p-8">
@@ -295,7 +366,7 @@ export default function BeneficiarioEditPage() {
             <Select
               label="Documento Identidad"
               name="documentoIdentidadId"
-              value={formData.documentoIdentidadId || ''}
+              value={formData.documentoIdentidadId > 0 ? formData.documentoIdentidadId : ''}
               onChange={handleInputChange}
               options={documentoOptions}
               placeholder="Seleccione un documento"
@@ -303,15 +374,22 @@ export default function BeneficiarioEditPage() {
               required
             />
 
-            <Input
-              label="Número Documento"
-              name="numeroDocumento"
-              value={formData.numeroDocumento}
-              onChange={handleNumeroDocumentoChange}
-              placeholder="00000000"
-              error={errors.numeroDocumento}
-              required
-            />
+            <div>
+              <Input
+                label="Número Documento"
+                name="numeroDocumento"
+                value={formData.numeroDocumento}
+                onChange={handleNumeroDocumentoChange}
+                onBlur={handleNumeroDocumentoBlur}
+                placeholder={selectedDocumento?.soloNumeros ? '00000000' : 'ABC123456'}
+                error={errors.numeroDocumento}
+                maxLength={numeroDocumentoMaxLength}
+                required
+              />
+              {numeroDocumentoHint && !errors.numeroDocumento && (
+                <p className="mt-1 text-xs text-gray-500">{numeroDocumentoHint}</p>
+              )}
+            </div>
 
             <Input
               label="Fecha Nacimiento"
@@ -319,6 +397,8 @@ export default function BeneficiarioEditPage() {
               type="date"
               value={formData.fechaNacimiento}
               onChange={handleInputChange}
+              onBlur={handleFechaNacimientoBlur}
+              max={todayISO}
               error={errors.fechaNacimiento}
               required
             />

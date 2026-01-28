@@ -129,23 +129,36 @@ export default function DocumentosIdentidadPage() {
               </h3>
               <p className="text-sm text-gray-600 mb-3">{doc.nombre}</p>
 
-              <div className="flex items-center gap-4 text-xs text-gray-500">
-                <span className="inline-flex items-center gap-1">
-                  <span className="font-medium px-1.5 py-0.5 bg-gray-100 rounded">
+              <div className="space-y-2 text-sm">
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-500">País:</span>
+                  <span className="font-medium px-2 py-0.5 bg-gray-100 rounded text-gray-700">
                     {doc.pais}
                   </span>
-                </span>
-                <span>ID: {doc.id}</span>
-              </div>
-
-              {(doc.longitud || doc.soloNumeros !== undefined) && (
-                <div className="mt-4 pt-4 border-t border-gray-100 text-xs text-gray-500">
-                  {doc.longitud && <p>Longitud: {doc.longitud} caracteres</p>}
-                  {doc.soloNumeros !== undefined && (
-                    <p>Solo números: {doc.soloNumeros ? 'Sí' : 'No'}</p>
-                  )}
                 </div>
-              )}
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-500">ID:</span>
+                  <span className="font-mono text-gray-700">{doc.id}</span>
+                </div>
+                {doc.longitud !== undefined && doc.longitud > 0 && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-500">Longitud:</span>
+                    <span className="text-gray-700">{doc.longitud} caracteres</span>
+                  </div>
+                )}
+                {doc.soloNumeros !== undefined && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-500">Solo números:</span>
+                    <span className={`px-2 py-0.5 rounded text-xs font-medium ${
+                      doc.soloNumeros 
+                        ? 'bg-blue-100 text-blue-700' 
+                        : 'bg-purple-100 text-purple-700'
+                    }`}>
+                      {doc.soloNumeros ? 'Sí' : 'No (alfanumérico)'}
+                    </span>
+                  </div>
+                )}
+              </div>
             </div>
           ))}
         </div>
