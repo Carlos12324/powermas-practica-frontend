@@ -269,12 +269,15 @@ export default function BeneficiariosListPage() {
                       {beneficiario.apellidos}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                      <span className="inline-flex items-center gap-1.5">
+                      <div className="flex items-center gap-1.5">
                         <span className="px-2 py-0.5 text-xs font-medium bg-blue-100 text-blue-700 rounded">
                           {beneficiario.documentoAbreviatura}
                         </span>
-                        {beneficiario.numeroDocumento}
-                      </span>
+                        <span>{beneficiario.numeroDocumento}</span>
+                        <span className="px-2 py-0.5 text-xs font-medium bg-gray-100 text-gray-600 rounded">
+                          {beneficiario.documentoPais}
+                        </span>
+                      </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                       {formatDateDisplay(beneficiario.fechaNacimiento)}

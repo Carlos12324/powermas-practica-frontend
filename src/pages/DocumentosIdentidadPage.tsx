@@ -147,16 +147,28 @@ export default function DocumentosIdentidadPage() {
                   </div>
                 )}
                 {doc.soloNumeros !== undefined && (
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-500">Solo números:</span>
-                    <span className={`px-2 py-0.5 rounded text-xs font-medium ${
-                      doc.soloNumeros 
-                        ? 'bg-blue-100 text-blue-700' 
-                        : 'bg-purple-100 text-purple-700'
-                    }`}>
-                      {doc.soloNumeros ? 'Sí' : 'No (alfanumérico)'}
-                    </span>
-                  </div>
+                  <>
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-500">Solo números:</span>
+                      <span className={`px-2 py-0.5 rounded text-xs font-medium ${
+                        doc.soloNumeros 
+                          ? 'bg-green-100 text-green-700' 
+                          : 'bg-gray-100 text-gray-500'
+                      }`}>
+                        {doc.soloNumeros ? 'Sí' : 'No'}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-500">Permite letras:</span>
+                      <span className={`px-2 py-0.5 rounded text-xs font-medium ${
+                        !doc.soloNumeros 
+                          ? 'bg-purple-100 text-purple-700' 
+                          : 'bg-gray-100 text-gray-500'
+                      }`}>
+                        {!doc.soloNumeros ? 'Sí' : 'No'}
+                      </span>
+                    </div>
+                  </>
                 )}
               </div>
             </div>

@@ -117,6 +117,19 @@ src/
 | `/dashboard` | Próximamente |
 | `/configuracion` | Próximamente |
 
+## Funcionalidades
+
+- CRUD de Beneficiarios: listar, buscar, crear, editar y eliminar (con confirmación).
+- Carga de Documentos de Identidad desde `GET /api/documentos-identidad/activos` para poblar el selector.
+- Validaciones en formulario: requeridos, sexo `M/F`, número de documento según reglas del tipo seleccionado y fecha de nacimiento no futura.
+- Manejo de errores: muestra `ProblemDetails.detail` cuando la API responde `application/problem+json`.
+
+## Notas
+
+- Si aparece un error de CORS, verifica que el backend permita solicitudes desde `http://localhost:5173`.
+- Los IDs pueden no ser consecutivos debido a que en SQL Server se usan columnas `IDENTITY` (comportamiento esperado).
+
+
 ## API Endpoints
 
 El frontend consume los siguientes endpoints:

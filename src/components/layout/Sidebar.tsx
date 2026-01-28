@@ -75,9 +75,11 @@ export default function Sidebar() {
       {/* Logo */}
       <div className="h-16 flex items-center px-6 border-b border-gray-200">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-            <span className="text-white font-bold text-sm">PM</span>
-          </div>
+          <img 
+            src="/assets/powermas_icon_background2.png" 
+            alt="PowerMas Logo" 
+            className="w-8 h-8 rounded-lg object-cover"
+          />
           <div>
             <h1 className="font-bold text-gray-900">PowerMas</h1>
             <p className="text-xs text-gray-500">Admin Panel</p>
