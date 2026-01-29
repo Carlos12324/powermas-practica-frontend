@@ -15,7 +15,7 @@ Frontend para el sistema de gestión de beneficiarios PowerMas, construido con R
 
 - Node.js 18 o superior
 - npm 9 o superior
-- API Backend ejecutándose (ASP.NET Core)
+- API Backend ejecutándose (ASP.NET Core) o puedes usar el link del deployado en Render.
 
 ## Instalación
 
@@ -34,18 +34,18 @@ npm install
 3. Configura las variables de entorno:
 
 ```bash
-# Copia el archivo de ejemplo
-cp .env.example .env
+# Crea un archivo .env en la raíz
+echo "VITE_API_BASE_URL=http://localhost:5005" > .env
 
-# Edita .env con la URL de tu API
-# VITE_API_BASE_URL=http://localhost:5005
+# O usa el backend de producción
+echo "VITE_API_BASE_URL=https://powermas-practica-backend.onrender.com" > .env
 ```
 
 ## Variables de entorno
 
-| Variable | Descripción | Valor por defecto |
-|----------|-------------|-------------------|
-| `VITE_API_BASE_URL` | URL base de la API | `http://localhost:5005` |
+| Variable | Descripción | Valor ejemplo |
+|----------|-------------|---------------|
+| `VITE_API_BASE_URL` | URL base de la API backend | `http://localhost:5005` (local) o `https://powermas-practica-backend.onrender.com` (prod) |
 
 ## Desarrollo
 
